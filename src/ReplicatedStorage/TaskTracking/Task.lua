@@ -9,7 +9,7 @@ local Task = {}
 local TaskFrame = script.Parent.TaskFrame
 local ScreenGui_Name = "TaskTracking"
 
-local TransitionTweeninfo = TweenInfo.new(.5, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
+local TransitionTweeninfo = TweenInfo.new(.25, Enum.EasingStyle.Sine, Enum.EasingDirection.In)
 
 function Task.new(name: string) -- Constructor for new task
     local self = {}
@@ -40,6 +40,7 @@ function Task:Transition(position: UDim2) -- Set position with tween
     if not self.frame then return end
     local tween = TweenService:Create(self.frame, TransitionTweeninfo, {Position = position})
     tween:Play()
+    return tween
 end
 
 function Task:Render() -- Render task frame on PlayerGui
@@ -62,7 +63,7 @@ function Task:unRender()
 
     if self.render_connection then
         self.render_connection:Disconnect()
-        -- self.render_connection = nil
+        self.render_connection = nil
     end
 end
 
