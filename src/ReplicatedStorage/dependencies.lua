@@ -9,7 +9,9 @@ local Errors = { -- Enum with errors
 }
 
 Dependencies._table = { -- Add dependencies here
-    ['TaskTracking'] = {Folder = ReplicatedStorage.TaskTracking, RequiredModule = ReplicatedStorage.TaskTracking.Task}
+    ['TaskTracking'] = {Folder = ReplicatedStorage.TaskTracking, RequiredModule = ReplicatedStorage.TaskTracking.Task},
+    ['BubblePrompt'] = {Folder = ReplicatedStorage.BubblePrompt, RequiredModule = ReplicatedStorage.BubblePrompt.BPrompt},
+    ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint}
 }
 
 function Dependencies.get(name: string) -- Get dependency require 
@@ -17,7 +19,7 @@ function Dependencies.get(name: string) -- Get dependency require
     local successed, require =  pcall(function() -- Try require
         return require(Dependencies._table[name].RequiredModule)
     end)
-
+    
     assert(successed, string.format(Errors['Error while require'], name))
 
     return require
