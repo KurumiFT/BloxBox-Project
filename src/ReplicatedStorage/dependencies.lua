@@ -11,7 +11,8 @@ local Errors = { -- Enum with errors
 Dependencies._table = { -- Add dependencies here
     ['TaskTracking'] = {Folder = ReplicatedStorage.TaskTracking, RequiredModule = ReplicatedStorage.TaskTracking.Task},
     ['BubblePrompt'] = {Folder = ReplicatedStorage.BubblePrompt, RequiredModule = ReplicatedStorage.BubblePrompt.BPrompt},
-    ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint}
+    ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint},
+    ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model}
 }
 
 function Dependencies.get(name: string) -- Get dependency require 
