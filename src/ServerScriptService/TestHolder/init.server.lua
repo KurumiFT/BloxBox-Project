@@ -4,7 +4,7 @@ local ServerStorage = game:GetService('ServerStorage')
 local TestEz = require(ReplicatedStorage.TestEZ.TestBootstrap)
 
 local UnitTestsPath = ServerStorage.ServerUnitTests
--- local IntegrationTestsPath = ReplicatedStorage.ClientIntegrationTests
+local IntegrationTestsPath = ServerStorage.ServerIntegrationTests
 
 local Configuration: Configuration = script:WaitForChild('Configuration')
 local Unit_Value: BoolValue = Configuration:WaitForChild('Unit')
@@ -15,8 +15,8 @@ if Unit_Value.Value then
     TestEz:run({UnitTestsPath})    
 end
 
--- if Integration_Value.Value then
---     print('Integration tests:')
---     TestEz:run({IntegrationTestsPath})
--- end
+if Integration_Value.Value then
+    print('Integration tests:')
+    TestEz:run({IntegrationTestsPath})
+end
 

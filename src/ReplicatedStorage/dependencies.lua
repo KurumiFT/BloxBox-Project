@@ -12,7 +12,8 @@ Dependencies._table = { -- Add dependencies here
     ['TaskTracking'] = {Folder = ReplicatedStorage.TaskTracking, RequiredModule = ReplicatedStorage.TaskTracking.Task},
     ['BubblePrompt'] = {Folder = ReplicatedStorage.BubblePrompt, RequiredModule = ReplicatedStorage.BubblePrompt.BPrompt},
     ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint},
-    ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model}
+    ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model},
+    ['Collector'] = {Folder = ReplicatedStorage.Works.Collector, RequiredModule = ReplicatedStorage.Works.Collector.Collector}
 }
 
 function Dependencies.get(name: string) -- Get dependency require 

@@ -20,6 +20,9 @@
     "ServerStorage": {
       "ServerUnitTests": {
         "$path": "src/ServerUnitTests"
+      },
+      "ServerIntegrationTests":{
+        "$path": "src/ServerIntegrationTests"
       }
     },
 
