@@ -10,5 +10,4 @@ Players.PlayerAdded:Connect(function(player)
     wait(5) -- For debug
 
     local _Model = CollectorModelDependency.new(player)
-    _Model:spawnCar()
 end)

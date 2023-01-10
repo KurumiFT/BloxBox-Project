@@ -55,13 +55,30 @@ function CollectorModel:_setCheckPointByAlias(alias: string, ...) -- Remove all 
     CheckPointAdd_Event:FireClient(self.player, ...)
 end
 
-function CollectorModel:spawnCar() -- Maybe this method will accept car prefab, temporary it's here
+function CollectorModel:_destroyCheckPoints() -- Destroy all collector's checkpoints on client side
+    if not self.player:IsA('Player') then return end -- That's mean, this mock object for testing
+
+    for _, v in pairs(CheckPointsAlias) do
+        CheckPointRemove_Event:FireClient(self.player, v)
+    end
+end
+
+function CollectorModel:_spawnCar() -- Maybe this method will accept car prefab, temporary it's here
+    if not self.player:IsA('Player') then return end -- Ignore mock object
+
     assert(self.player.Character, "Player hasn't character")
 
     self.car = CarPrefab:Clone() -- Spawn car
     self.car.Parent = CarsParent
 
     self.car:PivotTo(self.player.Character.PrimaryPart.CFrame * CFrame.new(10, 5, 0))
+end
+
+function CollectorModel:_destroyCar()
+    if self.car then
+        self.car:Destroy()
+        self.car = nil
+    end
 end
 
 function CollectorModel.new(player: Player) -- Constructor for collector model (task)
@@ -71,13 +88,17 @@ function CollectorModel.new(player: Player) -- Constructor for collector model (
     self.heartbeat_connection = nil
     setmetatable(self, {__index = CollectorModel})
 
-    self:_entry() -- Start cycke
+    self:_spawnCar()
+    self:_entry() -- Start cycle
 
     return self
 end
 
 function CollectorModel:Destroy() -- Destructor
     self:_destroyConnections()
+    self:_destroyCar()
+    self:_clearTasks()
+    self:_destroyCheckPoints()
 end
 
 function CollectorModel:_pickATM() -- Private method to pick random ATM
@@ -95,13 +116,21 @@ function CollectorModel:_setTask(alias: string, ...) -- Set task to task trackin
     TaskTrackingInit_Event:FireClient(self.player, ...)
 end
 
-function CollectorModel:_setProgressTask(...)
+function CollectorModel:_clearTasks() -- Remove collector work tasks
+    if not self.player:IsA('Player') then return end -- That's mean, this mock object for testing
+
+    for _,v in pairs(TaskTrackingAlias) do -- Unrender all tasks
+        TaskTrackingDelete_Event:FireClient(self.player, v)
+    end
+end
+
+function CollectorModel:_setProgressTask(...) -- Update progress task -> dependency from ProgressTracking
     if not self.player:IsA('Player') then return end 
 
     TaskTrackingSet_Event:FireClient(self.player, ...)
 end
 
-function CollectorModel:_destroyConnections()
+function CollectorModel:_destroyConnections() -- Destroy all connections
     if self.connection then
         self.connection:Disconnect()
     end
@@ -156,7 +185,7 @@ function CollectorModel:_unload() -- Unload car cycle
     end)
 end
 
-function CollectorModel:_pick()
+function CollectorModel:_pick() -- Pick cash from ATM
     assert(self.target, "No target, it's critical bug!")
     assert(self.req_bags, "No require bags, it's critical bug!")
     assert(self.carried_bags, "No carried bags, it's critical bug!")
