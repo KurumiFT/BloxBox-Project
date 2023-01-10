@@ -6,10 +6,10 @@ local TaskTrackingFolder: Folder = Dependencies.getFolder('TaskTracking')
 local TaskTrackingDependency = Dependencies.get('TaskTracking')
 
 -- Remotes
-local TaskTracingRemotes: Folder = TaskTrackingFolder.Remotes
-local Init_Event: RemoteEvent = TaskTracingRemotes.Init
-local Delete_Event: RemoteEvent = TaskTracingRemotes.Delete
-local Set_Event: RemoteEvent = TaskTracingRemotes.Set
+local TaskTrackingRemotes: Folder = TaskTrackingFolder.Remotes
+local Init_Event: RemoteEvent = TaskTrackingRemotes.Init
+local Delete_Event: RemoteEvent = TaskTrackingRemotes.Delete
+local Set_Event: RemoteEvent = TaskTrackingRemotes.Set
 
 local TaskFrame: Frame = TaskTrackingFolder.TaskFrame -- Needs to calculate position
 
