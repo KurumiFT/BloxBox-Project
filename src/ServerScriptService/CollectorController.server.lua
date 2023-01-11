@@ -20,9 +20,3 @@ Work_Event.Event:Connect(function(player, state) -- Listen work model change eve
         Models[player] = CollectorModelDependency.new(player) -- Create model for this player
     end
 end)
-
--- Debug part
-Players.PlayerAdded:Connect(function(player)
-    wait(10) -- For debug
-    game.ReplicatedStorage.WorkModel.Bindables.Hire:Fire(player, false, 'Collector')
-end)
