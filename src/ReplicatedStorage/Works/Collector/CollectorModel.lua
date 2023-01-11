@@ -3,8 +3,8 @@ local RunService = game:GetService('RunService')
 
 local CollectorModel = {}
 
-local ATM_Folder = game.Workspace.ATM
-local Bank = workspace.Bank
+local ATM_Folder: Folder = game.Workspace.ATM
+local Bank: Model = workspace.Bank
 
 -- Dependencies
 local Dependencies = require(ReplicatedStorage.dependencies)
@@ -22,13 +22,13 @@ local TaskTrackingSet_Event: RemoteEvent = TaskTrackingRemotes_Folder.Set
 --
 
 -- Maybe temporary
-local CarPrefab = workspace.Cars.CollectorCar
-local CarsParent = workspace.Cars
+local CarPrefab: Model = workspace.Cars.CollectorCar
+local CarsParent: Folder = workspace.Cars
 
-local Remotes_Folder = script.Parent.Remotes
-local CheckPointTrigger_Event = Remotes_Folder.CheckPoint
+local Remotes_Folder: Folder = script.Parent.Remotes
+local CheckPointTrigger_Event: RemoteEvent = Remotes_Folder.CheckPoint
 
-local CarCheckPointRender_Per = .5
+local CarCheckPointRender_Per: number = .5 -- How often checkpoint will update
 
 local CheckPointsAlias = {
     'CollectorATM',
@@ -104,13 +104,15 @@ function CollectorModel:_pickATM(blacklist: table?) -- Private method to pick ra
     local _blacklist = blacklist or {} -- If blacklist is nil, then format this to empty table
 
     local ATM_Childrens = ATM_Folder:GetChildren()
-    local SelectedATM = nil
+    local Index = 0
+    while Index < #ATM_Childrens do -- Remove from ATM_Childrens all blacklisted items
+        Index += 1
+        if table.find(_blacklist, ATM_Childrens[Index]) then
+            table.remove(ATM_Childrens, Index)
+        end
+    end
 
-    repeat -- Try to find ATM that not in _blacklist
-        SelectedATM = ATM_Childrens[math.random(1, #ATM_Childrens)]
-    until not table.find(_blacklist, SelectedATM) 
-
-    self.target = ATM_Childrens[math.random(1, #ATM_Childrens)]
+    self.target = ATM_Childrens[math.random(1, #ATM_Childrens)] -- Return random atm from left atm's
 end
 
 function CollectorModel:_setTask(alias: string, ...) -- Set task to task tracking of player
