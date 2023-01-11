@@ -39,7 +39,6 @@ local CheckPointsAlias = {
 
 local TaskTrackingAlias = {
     'CollectorATM',
-    'CollectorCarry',
     'CollectorUnload'
 }
 
@@ -101,8 +100,16 @@ function CollectorModel:Destroy() -- Destructor
     self:_destroyCheckPoints()
 end
 
-function CollectorModel:_pickATM() -- Private method to pick random ATM
+function CollectorModel:_pickATM(blacklist: table?) -- Private method to pick random ATM
+    local _blacklist = blacklist or {} -- If blacklist is nil, then format this to empty table
+
     local ATM_Childrens = ATM_Folder:GetChildren()
+    local SelectedATM = nil
+
+    repeat -- Try to find ATM that not in _blacklist
+        SelectedATM = ATM_Childrens[math.random(1, #ATM_Childrens)]
+    until not table.find(_blacklist, SelectedATM) 
+
     self.target = ATM_Childrens[math.random(1, #ATM_Childrens)]
 end
 
@@ -140,6 +147,23 @@ function CollectorModel:_destroyConnections() -- Destroy all connections
     end
 end
 
+function CollectorModel:_unload() -- Unload car cycle
+    assert(Bank:FindFirstChild('CollectorZone'), "No 'CollectorZone' in Bank model")
+    self:_destroyConnections() -- Destroy previous connections
+    
+    self:_setCheckPointByAlias('CollectorUnload', 'CollectorUnload', 30, Bank.CollectorZone.Position - Vector3.new(0, Bank.CollectorZone.Size.Y / 2), CheckPointTrigger_Event) -- Set checkpoint
+    self:_setTask('CollectorUnload', 'CollectorUnload', 'Collector work', 'Unload <font color="#FA7298">bags with cash</font>', {0, 1})
+
+    self.connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string) -- Wait for event from checkpoint
+        if player ~= self.player then return end
+        if state == true and name == 'CollectorUnload' then
+            print('End cycle')
+
+            self:_entry() -- Repeat cycle
+        end
+    end)
+end
+
 function CollectorModel:_carry() -- Carry cycle
     assert(self.car, 'No car in this player, please fix this bug!')
 
@@ -160,45 +184,22 @@ function CollectorModel:_carry() -- Carry cycle
     self.connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string)
         if player ~= self.player then return end
         if state == true and name == 'CollectorCarry' then
-            self.carried_bags += 1
-            self:_pick()
+            self.done_atm += 1
+            self:_atm()
         end
     end)
 
     spawnCheckPoint()
 end
 
-function CollectorModel:_unload() -- Unload car cycle
-    assert(Bank:FindFirstChild('CollectorZone'), "No 'CollectorZone' in Bank model")
-    self:_destroyConnections() -- Destroy previous connections
-    
-    self:_setCheckPointByAlias('CollectorUnload', 'CollectorUnload', 30, Bank.CollectorZone.Position - Vector3.new(0, Bank.CollectorZone.Size.Y / 2), CheckPointTrigger_Event) -- Set checkpoint
-    self:_setTask('CollectorUnload', 'CollectorUnload', 'Collector work', 'Unload <font color="#FA7298">bags with cash</font>', {0, 1})
-
-    self.connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string) -- Wait for event from checkpoint
-        if player ~= self.player then return end
-        if state == true and name == 'CollectorUnload' then
-            print('End cycle')
-
-            self:_entry() -- Repeat cycle
-        end
-    end)
-end
-
 function CollectorModel:_pick() -- Pick cash from ATM
     assert(self.target, "No target, it's critical bug!")
-    assert(self.req_bags, "No require bags, it's critical bug!")
-    assert(self.carried_bags, "No carried bags, it's critical bug!")
-
-    if self.carried_bags >= self.req_bags then -- If deliver enough bags -> unload
-        self:_unload()
-        return
-    end
+    assert(self.required_atm, "No required atm, it's critical bug!")
+    assert(self.done_atm, "No done atm, it's critical bug!")
 
     self:_destroyConnections() -- Destroy previous connections
 
     self:_setCheckPointByAlias('CollectorPick', 'CollectorPick', 5, self.target.Pick.Position - Vector3.new(0, self.target.Pick.Size.Y / 2), CheckPointTrigger_Event) -- Set checkpoint    
-    self:_setProgressTask('CollectorCarry', {self.carried_bags, self.req_bags})
 
     self.connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string)
         if player ~= self.player then return end
@@ -208,26 +209,37 @@ function CollectorModel:_pick() -- Pick cash from ATM
     end)
 end
 
-function CollectorModel:_entry() -- Private method to start collector cycle
-    self:_pickATM()
+function CollectorModel:_atm() -- Reach ATM
+    self:_pickATM(self.blacklist)
     assert(self.target, 'No target, please check ATM folder')
 
-    self:_destroyConnections()
+    table.insert(self.blacklist, self.target)
+
+    if self.done_atm >= self.required_atm then -- If requires done -> go unload to bank
+        self:_unload()
+        return
+    end
+
+    self:_destroyConnections() -- Destroy previous connections
 
     self:_setCheckPointByAlias('CollectorATM', 'CollectorATM', 30, self.target.PrimaryPart.Position - Vector3.new(0, self.target.PrimaryPart.Size.Y / 2), CheckPointTrigger_Event) -- Set checkpoint
-    self:_setTask('CollectorATM', 'CollectorATM', 'Collector work', 'Reach <font color="#FA7298">ATM</font>', {0, 1})
+    self:_setProgressTask('CollectorATM', {self.done_atm, self.required_atm}) -- Update progress for task
 
     self.connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string) -- Wait for event from checkpoint
         if player ~= self.player then return end
         if state == true and name == 'CollectorATM' then
-            -- Get requires for work
-            self.req_bags = math.random(3,5) -- Require bags for complete work
-            self.carried_bags = 0
-
-            self:_setTask('CollectorCarry', 'CollectorCarry', 'Collector work', 'Carry <font color="#00CC33">cash bags</font>', {self.carried_bags, self.req_bags})
             self:_pick()
         end
     end)
+end
+
+function CollectorModel:_entry() -- Entry method to cycle
+    self.required_atm = math.random(2, 4)
+    self.done_atm = 0
+    self.blacklist = {} -- Black list of ATM
+    self:_setTask('CollectorATM', 'CollectorATM', 'Collector work', 'Unload <font color="#FA7298">ATMs</font>', {self.done_atm, self.required_atm}) -- Set task for this work
+
+    self:_atm() -- Start cycle
 end
 
 return CollectorModel
