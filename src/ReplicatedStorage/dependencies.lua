@@ -13,7 +13,8 @@ Dependencies._table = { -- Add dependencies here
     ['BubblePrompt'] = {Folder = ReplicatedStorage.BubblePrompt, RequiredModule = ReplicatedStorage.BubblePrompt.BPrompt},
     ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint},
     ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model},
-    ['Collector'] = {Folder = ReplicatedStorage.Works.Collector, RequiredModule = ReplicatedStorage.Works.Collector.CollectorModel}
+    ['Collector'] = {Folder = ReplicatedStorage.Works.Collector, RequiredModule = ReplicatedStorage.Works.Collector.CollectorModel},
+    ['LockPickQTE'] = {Folder = ReplicatedStorage.QuickTimeEvents.LockPick, RequiredModule = ReplicatedStorage.QuickTimeEvents.LockPick.LockPick}
 }
 
 function Dependencies.get(name: string) -- Get dependency require 
