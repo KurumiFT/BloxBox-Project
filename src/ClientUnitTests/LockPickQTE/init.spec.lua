@@ -27,5 +27,9 @@ return function ()
             expect(_LockPick.chink).to.be.ok()
             expect(_LockPick.cursor).to.be.ok()
         end)
+
+        it('created ui', function()
+            expect(_LockPick.ui).to.be.ok()
+        end)
     end)
 end

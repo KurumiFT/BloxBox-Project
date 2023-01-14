@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="ScreenGui" referent="RBX09C9F84E083A4C5B989B2C77F1901C47">
+	<Item class="ScreenGui" referent="RBXD1B9F053A51A4311A10DD3825D7CD2C4">
 		<Properties>
 			<BinaryString name="AttributesSerialize"></BinaryString>
 			<bool name="AutoLocalize">true</bool>
@@ -23,7 +23,119 @@
 			<BinaryString name="Tags"></BinaryString>
 			<token name="ZIndexBehavior">1</token>
 		</Properties>
-		<Item class="ImageLabel" referent="RBX15F91A1D37C541579141F86C39589A5B">
+		<Item class="LocalScript" referent="RBX6B40B626C5BD49608DE88F953F6B3BF6">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="Disabled">true</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Prototype</string>
+				<token name="RunContext">0</token>
+				<string name="ScriptGuid">{E0DE7B23-FA3A-4165-9241-CC43BA4CBAAC}</string>
+				<ProtectedString name="Source"><![CDATA[-- Prototype
+local RunService = game:GetService('RunService')
+
+local EmptySpaceKoef: number = 0.03
+
+local TargetAngle = 0 
+
+local TargetPrefab = script.Parent.Target
+local RadialRoad = script.Parent.RadialRoad
+
+function sign(val: number)
+	if val >= 0 then return 1 end
+	return -1
+end
+
+RunService.Heartbeat:Connect(function()
+	local Width = script.Parent.AbsoluteSize.Y / 2
+	RadialRoad.Size = UDim2.new(0, Width, 0, Width)
+	RadialRoad.Position = UDim2.new(.5, -Width / 2, .5, -Width / 2)
+	
+	TargetAngle += 1
+	local TargetAngle = math.rad(TargetAngle)
+	local Radius = (Width - (Width * EmptySpaceKoef)) / 2
+	local x = (RadialRoad.AbsolutePosition.X + RadialRoad.AbsoluteSize.X / 2 - TargetPrefab.AbsoluteSize.X / 2) + (math.cos(TargetAngle) * Radius) + (sign(math.cos(TargetAngle)) * -1 * TargetPrefab.AbsoluteSize.X / 4)
+	local y = (RadialRoad.AbsolutePosition.Y + RadialRoad.AbsoluteSize.Y / 2 - TargetPrefab.AbsoluteSize.Y / 2) + (math.sin(TargetAngle) * Radius) + (sign(math.sin(TargetAngle)) * -1 * TargetPrefab.AbsoluteSize.Y / 4)
+	TargetPrefab.Position = UDim2.new(0, x, 0, y)
+end)]]></ProtectedString>
+				<int64 name="SourceAssetId">-1</int64>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Frame" referent="RBXB308681D39F74A9BB584CECCE0D4027F">
+			<Properties>
+				<bool name="Active">false</bool>
+				<Vector2 name="AnchorPoint">
+					<X>0</X>
+					<Y>0</Y>
+				</Vector2>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="AutoLocalize">true</bool>
+				<token name="AutomaticSize">0</token>
+				<Color3 name="BackgroundColor3">
+					<R>1</R>
+					<G>1</G>
+					<B>1</B>
+				</Color3>
+				<float name="BackgroundTransparency">0</float>
+				<Color3 name="BorderColor3">
+					<R>0.105882362</R>
+					<G>0.164705887</G>
+					<B>0.207843155</B>
+				</Color3>
+				<token name="BorderMode">0</token>
+				<int name="BorderSizePixel">1</int>
+				<bool name="ClipsDescendants">false</bool>
+				<bool name="Draggable">false</bool>
+				<int name="LayoutOrder">0</int>
+				<string name="Name">Cursor</string>
+				<Ref name="NextSelectionDown">null</Ref>
+				<Ref name="NextSelectionLeft">null</Ref>
+				<Ref name="NextSelectionRight">null</Ref>
+				<Ref name="NextSelectionUp">null</Ref>
+				<UDim2 name="Position">
+					<XS>0.487455189</XS>
+					<XO>0</XO>
+					<YS>0.486622065</YS>
+					<YO>0</YO>
+				</UDim2>
+				<Ref name="RootLocalizationTable">null</Ref>
+				<float name="Rotation">0</float>
+				<bool name="Selectable">false</bool>
+				<token name="SelectionBehaviorDown">0</token>
+				<token name="SelectionBehaviorLeft">0</token>
+				<token name="SelectionBehaviorRight">0</token>
+				<token name="SelectionBehaviorUp">0</token>
+				<bool name="SelectionGroup">false</bool>
+				<Ref name="SelectionImageObject">null</Ref>
+				<int name="SelectionOrder">0</int>
+				<UDim2 name="Size">
+					<XS>0</XS>
+					<XO>50</XO>
+					<YS>0</YS>
+					<YO>50</YO>
+				</UDim2>
+				<token name="SizeConstraint">0</token>
+				<int64 name="SourceAssetId">-1</int64>
+				<token name="Style">0</token>
+				<BinaryString name="Tags"></BinaryString>
+				<bool name="Visible">true</bool>
+				<int name="ZIndex">3</int>
+			</Properties>
+			<Item class="UICorner" referent="RBXEB908A181A284215A1BF550B89F61942">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<UDim name="CornerRadius">
+						<S>1</S>
+						<O>0</O>
+					</UDim>
+					<string name="Name">UICorner</string>
+					<int64 name="SourceAssetId">-1</int64>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="ImageLabel" referent="RBX0F72794B5D814455A3CEA0E5902404A9">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -116,7 +228,7 @@
 				<bool name="Visible">true</bool>
 				<int name="ZIndex">1</int>
 			</Properties>
-			<Item class="UICorner" referent="RBXFDF54A029FEF459F8EF1B3279455A0CB">
+			<Item class="UICorner" referent="RBXDD9783B900F449378B44CB87DC8C2DF1">
 				<Properties>
 					<BinaryString name="AttributesSerialize"></BinaryString>
 					<UDim name="CornerRadius">
@@ -129,46 +241,7 @@
 				</Properties>
 			</Item>
 		</Item>
-		<Item class="LocalScript" referent="RBXCEA45ECCD97E47C99EF7987F17263DA6">
-			<Properties>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<bool name="Disabled">true</bool>
-				<Content name="LinkedSource"><null></null></Content>
-				<string name="Name">Prototype</string>
-				<token name="RunContext">0</token>
-				<string name="ScriptGuid">{E0DE7B23-FA3A-4165-9241-CC43BA4CBAAC}</string>
-				<ProtectedString name="Source"><![CDATA[-- Prototype
-local RunService = game:GetService('RunService')
-
-local EmptySpaceKoef: number = 0.03
-
-local TargetAngle = 0 
-
-local TargetPrefab = script.Parent.Target
-local RadialRoad = script.Parent.RadialRoad
-
-function sign(val: number)
-	if val >= 0 then return 1 end
-	return -1
-end
-
-RunService.Heartbeat:Connect(function()
-	local Width = script.Parent.AbsoluteSize.Y / 2
-	RadialRoad.Size = UDim2.new(0, Width, 0, Width)
-	RadialRoad.Position = UDim2.new(.5, -Width / 2, .5, -Width / 2)
-	
-	TargetAngle += 1
-	local TargetAngle = math.rad(TargetAngle)
-	local Radius = (Width - (Width * EmptySpaceKoef)) / 2
-	local x = (RadialRoad.AbsolutePosition.X + RadialRoad.AbsoluteSize.X / 2 - TargetPrefab.AbsoluteSize.X / 2) + (math.cos(TargetAngle) * Radius) + (sign(math.cos(TargetAngle)) * -1 * TargetPrefab.AbsoluteSize.X / 4)
-	local y = (RadialRoad.AbsolutePosition.Y + RadialRoad.AbsoluteSize.Y / 2 - TargetPrefab.AbsoluteSize.Y / 2) + (math.sin(TargetAngle) * Radius) + (sign(math.sin(TargetAngle)) * -1 * TargetPrefab.AbsoluteSize.Y / 4)
-	TargetPrefab.Position = UDim2.new(0, x, 0, y)
-end)]]></ProtectedString>
-				<int64 name="SourceAssetId">-1</int64>
-				<BinaryString name="Tags"></BinaryString>
-			</Properties>
-		</Item>
-		<Item class="ImageLabel" referent="RBXF5A698F62CA3456B8D4162DD1FADEB8F">
+		<Item class="ImageLabel" referent="RBXB7FE137CC0D6458092ECD8207311A477">
 			<Properties>
 				<bool name="Active">false</bool>
 				<Vector2 name="AnchorPoint">
@@ -209,7 +282,7 @@ end)]]></ProtectedString>
 				</Vector2>
 				<float name="ImageTransparency">0</float>
 				<int name="LayoutOrder">0</int>
-				<string name="Name">Target</string>
+				<string name="Name">Chink</string>
 				<Ref name="NextSelectionDown">null</Ref>
 				<Ref name="NextSelectionLeft">null</Ref>
 				<Ref name="NextSelectionRight">null</Ref>
@@ -259,81 +332,8 @@ end)]]></ProtectedString>
 					<YO>0</YO>
 				</UDim2>
 				<bool name="Visible">true</bool>
-				<int name="ZIndex">1</int>
+				<int name="ZIndex">2</int>
 			</Properties>
-		</Item>
-		<Item class="Frame" referent="RBXB2193E61DD2D4E7C9F94036AA133F1D2">
-			<Properties>
-				<bool name="Active">false</bool>
-				<Vector2 name="AnchorPoint">
-					<X>0</X>
-					<Y>0</Y>
-				</Vector2>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<bool name="AutoLocalize">true</bool>
-				<token name="AutomaticSize">0</token>
-				<Color3 name="BackgroundColor3">
-					<R>1</R>
-					<G>1</G>
-					<B>1</B>
-				</Color3>
-				<float name="BackgroundTransparency">0</float>
-				<Color3 name="BorderColor3">
-					<R>0.105882362</R>
-					<G>0.164705887</G>
-					<B>0.207843155</B>
-				</Color3>
-				<token name="BorderMode">0</token>
-				<int name="BorderSizePixel">1</int>
-				<bool name="ClipsDescendants">false</bool>
-				<bool name="Draggable">false</bool>
-				<int name="LayoutOrder">0</int>
-				<string name="Name">Cursor</string>
-				<Ref name="NextSelectionDown">null</Ref>
-				<Ref name="NextSelectionLeft">null</Ref>
-				<Ref name="NextSelectionRight">null</Ref>
-				<Ref name="NextSelectionUp">null</Ref>
-				<UDim2 name="Position">
-					<XS>0.487455189</XS>
-					<XO>0</XO>
-					<YS>0.486622065</YS>
-					<YO>0</YO>
-				</UDim2>
-				<Ref name="RootLocalizationTable">null</Ref>
-				<float name="Rotation">0</float>
-				<bool name="Selectable">false</bool>
-				<token name="SelectionBehaviorDown">0</token>
-				<token name="SelectionBehaviorLeft">0</token>
-				<token name="SelectionBehaviorRight">0</token>
-				<token name="SelectionBehaviorUp">0</token>
-				<bool name="SelectionGroup">false</bool>
-				<Ref name="SelectionImageObject">null</Ref>
-				<int name="SelectionOrder">0</int>
-				<UDim2 name="Size">
-					<XS>0</XS>
-					<XO>50</XO>
-					<YS>0</YS>
-					<YO>50</YO>
-				</UDim2>
-				<token name="SizeConstraint">0</token>
-				<int64 name="SourceAssetId">-1</int64>
-				<token name="Style">0</token>
-				<BinaryString name="Tags"></BinaryString>
-				<bool name="Visible">true</bool>
-				<int name="ZIndex">1</int>
-			</Properties>
-			<Item class="UICorner" referent="RBXF72D9E6D538C4523B5F4DD2F684F4595">
-				<Properties>
-					<BinaryString name="AttributesSerialize"></BinaryString>
-					<UDim name="CornerRadius">
-						<S>1</S>
-						<O>0</O>
-					</UDim>
-					<string name="Name">UICorner</string>
-					<int64 name="SourceAssetId">-1</int64>
-					<BinaryString name="Tags"></BinaryString>
-				</Properties>
-			</Item>
 		</Item>
 	</Item>
 </roblox>
