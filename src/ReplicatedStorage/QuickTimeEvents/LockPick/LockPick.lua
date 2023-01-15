@@ -38,6 +38,7 @@ function QTE:_destroyConnection() -- Destroy all connections for this model
 end
 
 function QTE:_fire(...) -- Fire data to event
+    if self.destroyed then return end
     if not self.callback_event then return end
     if self.callback_event:IsA('BindableEvent') then
         self.callback_event:Fire(...)
@@ -160,10 +161,12 @@ function QTE:_initUI()
 end
 
 function QTE:Destroy()
+    self:_fire(false) -- Fire missed QTE
     if self.ui then
         self.ui:Destroy()
         self.ui = nil
     end
+    self.destroyed = true
     self:_destroyConnection() -- Destroy all connections
 end
 
@@ -175,6 +178,7 @@ function QTE.new(speed: number, iterations: number, callback_event: BindableEven
     self.done_iterations = 0
     self.callback_event = callback_event
     self.connection = nil -- Just remember this field
+    self.destroyed = false
     self:_createInputConnection()
     self:_initUI()
     self:_iteration()
