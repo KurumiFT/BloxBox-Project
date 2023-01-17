@@ -17,7 +17,6 @@ function Add(type: string, meta: table)
     if LastQTE.examplar then
         LastQTE.examplar:Destroy() -- Destroy prev QTE
     end
-
     assert(QTE_Dependencies[type], "There isn't QTE with this type")
     LastQTE = {type = type, examplar = QTE_Dependencies[type].new(unpack(meta))}
 end

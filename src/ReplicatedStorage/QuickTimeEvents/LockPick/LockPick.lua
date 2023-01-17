@@ -90,12 +90,14 @@ function QTE:_iteration() -- Method to prepare one iteration of lockpicking
     if not self.ui then return end
     if self.errors >= MaxErrors then -- If make enough errors -> destroy this shit
         self:_fire(false)
+        self.destroyed = true -- set ignore new fires flag
         self:Destroy()
         return
     end
 
     if self.done_iterations >= self.iterations then
         self:_fire(true)
+        self.destroyed = true -- set ignore new fires flag
         self:Destroy()
         return
     end

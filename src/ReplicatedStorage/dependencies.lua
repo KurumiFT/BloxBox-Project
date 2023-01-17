@@ -14,6 +14,8 @@ Dependencies._table = { -- Add dependencies here
     ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint},
     ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model},
     ['Collector'] = {Folder = ReplicatedStorage.Works.Collector, RequiredModule = ReplicatedStorage.Works.Collector.CollectorModel},
+    ['CarThief'] = {Folder = ReplicatedStorage.Works.CarThief, RequiredModule = ReplicatedStorage.Works.CarThief.CarThiefModel},
+    ['ProximityPrompt'] = {Folder = ReplicatedStorage.ProximityPrompt}, -- Structure of this module need to refactor (legacy)
     ['QTE'] = {Folder = ReplicatedStorage.QuickTimeEvents}, -- This havent's module
     ['LockPickQTE'] = {Folder = ReplicatedStorage.QuickTimeEvents.LockPick, RequiredModule = ReplicatedStorage.QuickTimeEvents.LockPick.LockPick}
 }

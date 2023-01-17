@@ -1,0 +1,25 @@
+return function ()
+    local Node = require(script.Parent)
+
+    describe("Choice manage test", function()
+        it("new choice",function()
+            local _Node = Node("Test")
+            _Node:NewChoice("Test", "Action", 1.5)
+            expect(#_Node.choices).to.equal(1)
+        end)
+
+        it("set redirect", function()
+            local _Node = Node("Test")
+            local _Choice = _Node:NewChoice()
+            _Choice:SetRedirect("Test")
+            expect(_Choice.redirect).to.equal("Test")
+        end)
+
+        it("set action", function()
+            local _Node = Node("Test")
+            local _Choice = _Node:NewChoice()
+            _Choice:SetAction("Test")
+            expect(_Choice.action).to.equal("Test")
+        end)
+    end)
+end

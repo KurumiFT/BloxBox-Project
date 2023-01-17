@@ -29,6 +29,9 @@
     "StarterPlayer": {
       "StarterCharacterScripts": {
         "$path": "src/StarterCharacterScripts"
+      },
+      "StarterPlayerScripts": {
+        "$path": "src/StarterPlayerScripts"
       }
     },
 

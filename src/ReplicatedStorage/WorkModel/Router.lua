@@ -8,7 +8,8 @@ local Works_Folder = ReplicatedStorage.Works
 
 Router._routes = { 
     ['Test'] = script.Parent.Bindables.Test, -- Using for tests
-    ['Collector'] = Dependencies.getFolder('Collector').Bindables.Work
+    ['Collector'] = Dependencies.getFolder('Collector').Bindables.Work,
+    ['CarThief'] = Dependencies.getFolder('CarThief').Bindables.Work
 }
 
 local TestPrefix = 'Test'
