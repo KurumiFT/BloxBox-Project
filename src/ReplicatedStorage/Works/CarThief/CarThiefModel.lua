@@ -39,6 +39,9 @@ local QTE_Event: RemoteEvent = Remotes_Folder.QTE
 local Cars_Folder: Folder = workspace.Cars
 local Target_Car: Model = Cars_Folder.ThiefCar
 
+local CarDealer: Model = workspace.CarDealer
+local Park_Part: Part = CarDealer.Park
+
 local Cameras_Folder: Folder = workspace.CTCameras
 local Camera_Range = {2, #Cameras_Folder:GetChildren()}
 
@@ -47,16 +50,19 @@ local StatesEnum = {
     ['CheckPointMonitoring'] = 1,
     ['LockpickCamera'] = 2,
     ['ReachCar'] = 3,
-    ['LockpickCar'] = 4
+    ['LockpickCar'] = 4,
+    ['DeliverCar'] = 5
 }
 
 local CheckPointsAlias = {
-    'CTReach'
+    'CTReach',
+    'CTDeliver'
 }
 local TaskTrackingAlias = {
     'CTCamera',
     'CTReach',
-    'CTLockpickCar'
+    'CTLockpickCar',
+    'CTDeliver'
 }
 
 function CarThiefModel:_lockpickPP(target: Part, argument: string)
@@ -195,7 +201,7 @@ function CarThiefModel:_pickCameraData() -- Camera data btw
     self.spawn_point = RandomLocations[math.random(1, #RandomLocations)]
 end
 
-function CarThiefModel:_checkPointListener()
+function CarThiefModel:_checkPointListener() -- Monitoring checkPoint event
     assert(not self.checkpoint_connection, 'Already has checkpoint connection')
 
     self.checkpoint_connection = CheckPointTrigger_Event.OnServerEvent:Connect(function(player: Player, state: boolean, name: string)
@@ -213,10 +219,19 @@ function CarThiefModel:_checkPointListener()
             self:_carHack()
             return
         end
+
+        if self.state == StatesEnum.DeliverCar and state then
+            if name ~= 'CTDeliver' then return end -- Bug from client side
+            self:Destroy()
+            if self.on_complete then
+                self.on_complete()
+            end
+            return
+        end
     end)
 end
 
-function CarThiefModel:_qteListener()
+function CarThiefModel:_qteListener() -- Monitoring qte event
     self.qte_connection = QTE_Event.OnServerEvent:Connect(function(player: Player, state: boolean)
         if player ~= self.player then return end
         if self.state == StatesEnum.LockpickCamera then
@@ -227,12 +242,12 @@ function CarThiefModel:_qteListener()
 
         if self.state == StatesEnum.LockpickCar then
             if not state then self:_carHack(); return end
-            -- Transition to deliever car
+            self:_deliverCar()
         end
     end)
 end
 
-function CarThiefModel:_ppListener()
+function CarThiefModel:_ppListener() -- Monitoring pp event
     self.pp_connection = ProximityPrompt_Event.OnServerEvent:Connect(function(player: Player, object: Part, index: number)
         if player ~= self.player then return end
         if self.state == StatesEnum.CheckPointMonitoring then
@@ -249,14 +264,27 @@ function CarThiefModel:_ppListener()
     end)
 end
 
+function CarThiefModel:onComplete(callback) -- Callback on complete
+    self.on_complete = callback
+end
+
 function CarThiefModel:_carReach()
     self.state = StatesEnum.ReachCar
     self.car = Target_Car:Clone()
     self.car.Parent = Cars_Folder
     self.car:PivotTo(self.spawn_point.CFrame * CFrame.new(0, 5, 0))
+    self.car.VehicleSeat.Disabled = true
 
     self:_setTask('CTReach', 'CTReach', 'Car thief work', 'Reach <font color="#FA7298">car</font>', {0, 1})
     self:_setCheckPointByAlias('CTReach', 'CTReach', 30, self.spawn_point.Position - Vector3.new(0, self.spawn_point.Size.Y / 2), CheckPointTrigger_Event)
+end
+
+function CarThiefModel:_deliverCar()
+    self.state = StatesEnum.DeliverCar
+    self.car.VehicleSeat.Disabled = false
+
+    self:_setTask('CTDeliver', 'CTDeliver', 'Car thief work', 'Deliver car to <font color="#FA7298">dealer</font>', {0, 1})
+    self:_setCheckPointByAlias('CTDeliver', 'CTDeliver', 30, Park_Part.Position - Vector3.new(0, Park_Part.Size.Y / 2), CheckPointTrigger_Event)
 end
 
 function CarThiefModel:_carHack()
