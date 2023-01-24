@@ -9,6 +9,7 @@ local Errors = { -- Enum with errors
 }
 
 Dependencies._table = { -- Add dependencies here
+    ['Trove'] = {RequiredModule = ReplicatedStorage.Trove},
     ['TaskTracking'] = {Folder = ReplicatedStorage.TaskTracking, RequiredModule = ReplicatedStorage.TaskTracking.Task},
     ['BubblePrompt'] = {Folder = ReplicatedStorage.BubblePrompt, RequiredModule = ReplicatedStorage.BubblePrompt.BPrompt},
     ['CheckPoint'] = {Folder = ReplicatedStorage.CheckPoint, RequiredModule = ReplicatedStorage.CheckPoint.CheckPoint},
