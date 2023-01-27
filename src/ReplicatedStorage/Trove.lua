@@ -19,16 +19,24 @@ function Trove:AddConnection(signal: RBXScriptSignal, callback): RBXScriptConnec
     return connection
 end
 
+function Trove:Disconnect() -- Remove all connections
+    for i, v in pairs(self.connections) do
+        if not v then continue end 
+        v:Disconnect()
+        v = nil
+    end
+
+    self.connections = {}
+end
+
 function Trove:Destroy()
     for _, instance in ipairs(self.instances) do
         if not instance then continue end
         instance:Destroy() 
+        instance = nil
     end
 
-    for _, connection in ipairs(self.connections) do
-        if not connection then continue end
-        connection:Disconnect()
-    end
+    self:Disconnect()
 end
 
 return Trove

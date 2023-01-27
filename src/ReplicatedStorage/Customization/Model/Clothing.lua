@@ -2,7 +2,7 @@
 
 local ClothingModel = {}
 
-function ClothingModel.new(name: string, object: Decal | Model | MeshPart | Pants | Shirt, part: string, category: string, price: number, meta: table)
+function ClothingModel.new(name: string, object: Decal | Model | MeshPart | Pants | Shirt, part: string, category: string, price: number, image: string, meta: table)
     local self = setmetatable({}, {__index = ClothingModel})
     -- Set fields
     self.name = name
@@ -11,12 +11,13 @@ function ClothingModel.new(name: string, object: Decal | Model | MeshPart | Pant
     self.category = category
     self.price = price
     self.meta = meta
+    self.image = image
     
     return self
 end
 
 function ClothingModel.newFrom(target: Folder)
-    return ClothingModel.new(target.Display.Value, target.Object, target.Part.Value, target.Category.Value, target.Price.Value, nil)
+    return ClothingModel.new(target.Display.Value, target.Object, target.Part.Value, target.Category.Value, target.Price.Value, target.Image.Value ,nil)
 end
 
 function ClothingModel:check(part: string, category: string)

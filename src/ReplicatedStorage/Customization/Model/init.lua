@@ -2,6 +2,7 @@ local Model = {}
 
 local ClothingModel = require(script.Clothing)
 local CartModel = require(script.Cart)
+local Shared = require(script.Parent.shared)
 
 function clothingCheckOnCriteria(clothing, criteria: table)
     for part, categories in pairs(criteria) do
@@ -11,14 +12,6 @@ function clothingCheckOnCriteria(clothing, criteria: table)
     end
 
     return false
-end
-
-function getKeys(target: table): table -- Get keys table from table
-    local keys = {}
-    for key, _ in pairs(target) do
-        table.insert(keys, key)
-    end
-    return keys
 end
 
 function Model:parse()
@@ -55,8 +48,9 @@ function Model.new(from: Folder, criteria: table)
     self.criteria = criteria
     self.clothing_data = {} -- Parsed clothing models
     self.cart = CartModel.new()
-    -- Must be selected category and part
-
+    self.selected_part = Shared.sortByOrder(Shared.getKeys(self.criteria), Shared.Part_Order)[1]
+    self.selected_category = Shared.sortByOrder(self.criteria[self.selected_part], Shared.Category_Order)[1]
+    -- Selected values waiting
     self:parse() -- Parse by default
     return self
 end
