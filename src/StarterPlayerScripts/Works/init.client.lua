@@ -1,0 +1,1 @@
+local RequiredModules = {}; for i,v in pairs(script:GetChildren()) do RequiredModules[v.Name] = require(v) end

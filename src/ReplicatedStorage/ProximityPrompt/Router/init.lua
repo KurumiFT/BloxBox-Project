@@ -8,9 +8,14 @@ local Manage_Folder = ProximityPrompt_Folder:WaitForChild("Manage")
 
 local Dependencies = require(ReplicatedStorage.dependencies)
 
+local Inventory_Folder = ReplicatedStorage:WaitForChild('kInventory')
+local Pickup_Event = Inventory_Folder:WaitForChild('Pickup')
+
 local Routes = {
     ["General"] = Manage_Folder:WaitForChild("General"),
-    ["CTLockPick"] = Dependencies.getFolder('CarThief').Remotes.ProximityPrompt
+    ["CTLockPick"] = Dependencies.getFolder('CarThief').Remotes.ProximityPrompt,
+    ['Pickup'] = Pickup_Event,
+    ['Cashier'] = Dependencies.getFolder('Cashier').Events.Prompt
     -- ...
 }
 local Argument_Seperator = "_"

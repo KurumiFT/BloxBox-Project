@@ -16,9 +16,11 @@ Dependencies._table = { -- Add dependencies here
     ['WorkModel'] = {Folder = ReplicatedStorage.WorkModel, RequiredModule = ReplicatedStorage.WorkModel.Model},
     ['Collector'] = {Folder = ReplicatedStorage.Works.Collector, RequiredModule = ReplicatedStorage.Works.Collector.CollectorModel},
     ['CarThief'] = {Folder = ReplicatedStorage.Works.CarThief, RequiredModule = ReplicatedStorage.Works.CarThief.CarThiefModel},
+    ['CarShop'] = {Folder = ReplicatedStorage.CarShop},
     ['ProximityPrompt'] = {Folder = ReplicatedStorage.ProximityPrompt}, -- Structure of this module need to refactor (legacy)
     ['QTE'] = {Folder = ReplicatedStorage.QuickTimeEvents}, -- This havent's module
-    ['LockPickQTE'] = {Folder = ReplicatedStorage.QuickTimeEvents.LockPick, RequiredModule = ReplicatedStorage.QuickTimeEvents.LockPick.LockPick}
+    ['LockPickQTE'] = {Folder = ReplicatedStorage.QuickTimeEvents.LockPick, RequiredModule = ReplicatedStorage.QuickTimeEvents.LockPick.LockPick},
+    ['Cashier'] = {Folder = ReplicatedStorage.Works.Cashier}
 }
 
 function Dependencies.get(name: string) -- Get dependency require 
